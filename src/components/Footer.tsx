@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer id="contact" className="bg-gray-900 dark:bg-black text-white py-12">
+    <footer id="contact" className="bg-gray-900  text-white py-12">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Personal Info */}
@@ -42,6 +42,7 @@ const Footer: React.FC = () => {
               <a href="#skills" className="text-gray-400 hover:text-white transition-colors">Skills</a>
               <a href="#education" className="text-gray-400 hover:text-white transition-colors">Education</a>
               <a href="#certifications" className="text-gray-400 hover:text-white transition-colors">Certifications</a>
+              <a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a> {/* Added */}
             </div>
           </div>
 

@@ -9,6 +9,8 @@ const Header: React.FC = () => {
     { label: 'Services', href: '#services' },
     { label: 'Portfolio', href: '#portfolio' },
     { label: 'Skills', href: '#skills' },
+    { label: 'Education', href: '#education' }, // Added
+    { label: 'Certifications', href: '#certifications' }, // Added
     { label: 'Contact', href: '#contact' },
   ];
 

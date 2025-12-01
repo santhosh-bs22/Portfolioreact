@@ -1,91 +1,139 @@
 import React from 'react';
 import { services } from '../data/portfolioData';
-import { FiCode, FiSmartphone, FiLayers } from 'react-icons/fi';
+import { FiCode, FiSmartphone, FiZap, FiEdit3 } from 'react-icons/fi'; // FiLayers removed
+import { motion } from 'framer-motion';
+
+// --- Note on 3D Flip Card ---
+// The flip effect is now implemented using Tailwind's arbitrary value syntax for 
+// the necessary 3D properties: `[perspective:1000px]`, `[transform-style:preserve-3d]`, 
+// and `[backface-visibility:hidden]`.
+
+const ServiceFlipCard: React.FC<{ service: typeof services[0], index: number }> = ({ service, index }) => {
+    
+    const getIconComponent = (icon: string) => {
+        switch (icon) {
+            case '💻':
+                return <FiCode className="text-white" size={32} />;
+            case '📱':
+                return <FiSmartphone className="text-white" size={32} />;
+            case '🎨':
+                return <FiEdit3 className="text-white" size={32} />;
+            case '⚡':
+                return <FiZap className="text-white" size={32} />;
+            default:
+                return <span className="text-3xl text-white">{icon}</span>;
+        }
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="group [perspective:1000px] h-96" // Perspective container
+        >
+            <div
+                className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
+            >
+                {/* Front Side */}
+                <div
+                    className="absolute inset-0 bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border-t-4 border-primary-500 flex flex-col justify-start items-start [backface-visibility:hidden]"
+                >
+                    {/* Icon */}
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mb-6 shadow-md">
+                        {getIconComponent(service.icon)}
+                    </div>
+
+                    {/* Title & Description */}
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                        {service.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                        {service.description}
+                    </p>
+
+                    <div className="inline-flex items-center text-primary-600 dark:text-primary-500 font-medium">
+                        Hover to see details →
+                    </div>
+                </div>
+
+                {/* Back Side */}
+                <div
+                    className="absolute inset-0 bg-gray-900 dark:bg-gray-700 rounded-2xl p-8 shadow-xl flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]"
+                >
+                    <h3 className="text-xl font-bold text-primary-400 mb-4 border-b border-primary-700 pb-2">
+                        Key Features
+                    </h3>
+                    
+                    <ul className="space-y-3 flex-grow">
+                        {service.features.map((feature, index) => (
+                            <li key={index} className="flex items-center text-gray-200 dark:text-gray-300">
+                                <span className="w-2 h-2 bg-primary-400 rounded-full mr-3 flex-shrink-0"></span>
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
+
+                    <a href="#contact" className="inline-flex items-center gap-2 mt-6 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                        Start a Project
+                        <FiZap />
+                    </a>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
 
 const Services: React.FC = () => {
-  const getIconComponent = (icon: string) => {
-    switch (icon) {
-      case '💻':
-        return <FiCode className="text-primary-500" size={28} />;
-      case '📱':
-        return <FiSmartphone className="text-primary-500" size={28} />;
-      case '🎨':
-        return <FiLayers className="text-primary-500" size={28} />;
-      default:
-        return <span className="text-2xl">{icon}</span>;
-    }
-  };
+    return (
+        <section id="services" className="py-16 md:py-28 bg-gray-50 dark:bg-gray-950">
+            <div className="container mx-auto px-6">
+                {/* Section Header */}
+                <div className="text-center mb-16">
+                    <motion.h2 
+                        initial={{ y: -20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4"
+                    >
+                        My Quality <span className="text-primary-600 dark:text-primary-500">Services</span>
+                    </motion.h2>
+                    <motion.p 
+                        initial={{ y: -20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto"
+                    >
+                        I provide comprehensive digital solutions, combining technical excellence with creative design.
+                    </motion.p>
+                </div>
 
-  return (
-    <section id="services" className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            My Quality Services
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            I provide comprehensive digital solutions to help your business grow and succeed in the online world.
-          </p>
-        </div>
+                {/* Services Grid with Flip Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {services.map((service, index) => (
+                        <ServiceFlipCard key={service.id} service={service} index={index} />
+                    ))}
+                </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200 dark:border-gray-700"
-            >
-              {/* Icon */}
-              <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 transition-colors">
-                {getIconComponent(service.icon)}
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                {service.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {service.description}
-              </p>
-
-              {/* Features */}
-              <ul className="space-y-2">
-                {service.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-700 dark:text-gray-300">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Hover Link */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
-                <a href="#" className="text-primary-600 dark:text-primary-500 font-medium inline-flex items-center gap-2">
-                  Learn more
-                  <span className="group-hover:translate-x-2 transition-transform">→</span>
-                </a>
-              </div>
+                {/* CTA */}
+                <div className="text-center mt-20">
+                    <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
+                        Ready to transform your ideas into reality?
+                    </p>
+                    <a
+                        href="#contact"
+                        className="inline-flex items-center gap-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-10 py-4 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold text-lg shadow-lg"
+                    >
+                        Discuss a Project
+                        <FiCode size={20} />
+                    </a>
+                </div>
             </div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-16">
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Have a project in mind? Let's discuss how we can work together.
-          </p>
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-medium"
-          >
-            Start a Project
-            <FiCode />
-          </a>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default Services;
