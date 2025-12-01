@@ -1,8 +1,7 @@
 import React from 'react';
-import { FiGithub, FiLinkedin, FiMail, FiHeart, FiMapPin, FiPhone } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
 
 const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer id="contact" className="bg-gray-900  text-white py-12">

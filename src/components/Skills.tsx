@@ -246,7 +246,7 @@ const Skills = () => {
                 icon: '😊',
                 traits: ['Optimistic', 'Resilient', 'Solution-focused']
               },
-            ].map((softSkill, index) => (
+            ].map((softSkill,) => (
               <div
                 key={softSkill.name}
                 className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200 dark:border-gray-700"
